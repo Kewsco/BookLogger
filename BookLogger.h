@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+// Test
 // Enumerator to keep track of which screen the user is currently on. 
 typedef enum {
     INIT, MAIN, OTHER
