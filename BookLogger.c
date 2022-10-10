@@ -9,7 +9,6 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-
 // Handle the choice of the user depending on what screen theyre currently on. 
 void HandleChoice(int choice){
     switch(currentScreen){
