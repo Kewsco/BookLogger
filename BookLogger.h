@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 // Test
+// Macbook Test...
 // Enumerator to keep track of which screen the user is currently on. 
 typedef enum {
     INIT, MAIN, OTHER
