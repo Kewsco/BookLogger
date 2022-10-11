@@ -3,7 +3,7 @@ A small terminal application to any books that have been read.
 
 All collections will be stored within the Collections folder.
 ----
-#### Functionality:
+Functionality:
   * Create Collection
   * Delete Collection
   * Remove Book
@@ -11,7 +11,7 @@ All collections will be stored within the Collections folder.
   * Print Full Collection
   * Search Collection (Not Implemented)
 
-#### Book Data:
+Book Data:
   * title
   * author
 
