@@ -53,3 +53,4 @@ void UpdateIDs();
 //Creation Methods..
 Book* CreateBook();
 FILE* CreateAndOpenFile();
+char* CreateFilePath(char* name);

@@ -7,6 +7,7 @@ char filePath[50];
 
 int main(int argc, char const *argv[])
 {
+    //CreateFilePath("Doggy.txt");
     DisplayInitMenu();
     return 0;
 }
@@ -73,7 +74,7 @@ void MainScreenOptions(int choice){
 
 // Get an existing file path from the user. File must exist in the system.
 void LoadCollection(){
-    printf("Enter your (.txt) file directory ({drive}\\\\{directory}\\\\{filename}): ");
+    printf("Enter your (.txt) file name ({drive}\\\\{directory}\\\\{filename}): ");
     scanf("%s", &filePath);
     getchar();
     fptr = fopen(filePath, "r");
@@ -94,12 +95,12 @@ void CreateCollection(){
     }
     char titleLoc[20];
     char* title = titleLoc;
-
-    printf("Collection Title (20 Characters Maximum): ");
-    fgets(title, 20, stdin);
+    printf("Collection Title (20 Characters Maximum - No Spaces): ");
+    scanf("%s", title);
     collection->title = title;
     collection->size = 0;
     collection->collection = NULL;
+    CreateAndOpenFile(title);
     DisplayMainMenu();
 }
 
@@ -166,16 +167,16 @@ void PrintCollection(){
 void SaveCollection(){
     fptr = fopen(filePath, "w");
     if(fptr == 0)
-        CreateAndOpenFile();
+        CreateAndOpenFile(collection->title);
     
-    fprintf(fptr, "Collection: %s.\n", collection->title);
+    fprintf(fptr, "Collection: %s\n", collection->title);
+    printf("Collection saved to: %s", filePath);
+    //TODO:- Loop through logged books and add them to the file.
+    DisplayMainMenu();
 }
 
-FILE* CreateAndOpenFile(){
-    printf("No File Currently exists for this collection.\n");
-    printf("Please enter a full filepath where you would like the file to be saved.\n");
-    printf("Format: {drive}\\\\{directory}\\\\{filename.txt}\n");
-    scanf("%s", &filePath);
+FILE* CreateAndOpenFile(char* title){
+    strcpy(filePath, CreateFilePath(title));
     return fopen(filePath, "w");
 }
 
@@ -208,7 +209,6 @@ Book* CreateBook(){
     printf("Adding Book:\n\t%s\t%s", newBook->title, newBook->author);
     return newBook;
 }
-
 void UpdateIDs(){
     collection->size = 0;
     struct BookNode* bn = collection->collection;
@@ -220,7 +220,6 @@ void UpdateIDs(){
     }
     free(bn);
 }
-
 void DisplayInitMenu(){
     currentScreen = INIT;
     int choice;
@@ -251,4 +250,15 @@ void DisplayMainMenu(){
     getchar();
     system("cls");
     HandleChoice(choice);
+}
+char* CreateFilePath(char* name){
+    char* fullName;
+    fullName = malloc(sizeof(char)*50);
+    char* ext = ".txt";
+    char* dir = ".\\Collections\\";
+    strcpy(fullName, dir);
+    strcat(fullName, name);
+    strcat(fullName, ext);
+    printf("%s", fullName);
+    return fullName;
 }
