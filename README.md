@@ -17,9 +17,11 @@ Stuct Information
 Book Data:
   * title
   * author
+
 Collections:
   * title
   * BookNode
+
 BookNode:
   * Book
   * Next
