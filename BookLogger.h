@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 // Test
 // Macbook Test...
 // Enumerator to keep track of which screen the user is currently on. 
@@ -49,5 +50,6 @@ void DeleteCollection();
 void SearchCollection();
 void UpdateIDs();
 
-//Node Creation Methods..
+//Creation Methods..
 Book* CreateBook();
+FILE* CreateAndOpenFile();

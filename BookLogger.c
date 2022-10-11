@@ -2,6 +2,8 @@
 
 Screen currentScreen;
 Collection* collection;
+FILE* fptr;
+char filePath[50];
 
 int main(int argc, char const *argv[])
 {
@@ -17,13 +19,13 @@ void HandleChoice(int choice){
             break;
         case MAIN:
             MainScreenOptions(choice);
+            break;
         default:
             printf("Option Selected.");
     }
 }
 
 void InitScreenOptions(int choice){
-    getchar();
     switch(choice){
         case 0:
             exit(0);
@@ -41,7 +43,6 @@ void InitScreenOptions(int choice){
 }
 
 void MainScreenOptions(int choice){
-    getchar();
     switch(choice){
         case 0:
             exit(0);
@@ -70,9 +71,19 @@ void MainScreenOptions(int choice){
     }
 }
 
+// Get an existing file path from the user. File must exist in the system.
 void LoadCollection(){
-    printf("Collection Loaded...\n");
-    DisplayMainMenu();
+    printf("Enter your (.txt) file directory ({drive}\\\\{directory}\\\\{filename}): ");
+    scanf("%s", &filePath);
+    getchar();
+    fptr = fopen(filePath, "r");
+    if(fptr == 0){
+        printf("Error loading file. Please enter a valid file path...\n");
+        LoadCollection();
+        return;
+    } else {
+        printf("File loaded successfully.");
+    }
 }
 
 void CreateCollection(){
@@ -153,7 +164,19 @@ void PrintCollection(){
 }
 
 void SaveCollection(){
+    fptr = fopen(filePath, "w");
+    if(fptr == 0)
+        CreateAndOpenFile();
+    
+    fprintf(fptr, "Collection: %s.\n", collection->title);
+}
 
+FILE* CreateAndOpenFile(){
+    printf("No File Currently exists for this collection.\n");
+    printf("Please enter a full filepath where you would like the file to be saved.\n");
+    printf("Format: {drive}\\\\{directory}\\\\{filename.txt}\n");
+    scanf("%s", &filePath);
+    return fopen(filePath, "w");
 }
 
 void DeleteCollection(){
@@ -207,6 +230,7 @@ void DisplayInitMenu(){
     printf("[0] - Quit.\n");
     printf("Select Option [0-2]: ");
     scanf(" %d", &choice);
+    getchar();
     system("cls");
     HandleChoice(choice);
     
@@ -224,6 +248,7 @@ void DisplayMainMenu(){
     printf("[0] - Quit\n");
     printf("Select Option [0-5]: ");
     scanf(" %d", &choice);
+    getchar();
     system("cls");
     HandleChoice(choice);
 }
