@@ -12,7 +12,14 @@ Functionality:
   * Print Full Collection
   * Search Collection (Not Implemented)
 
+Stuct Information
+----
 Book Data:
   * title
   * author
-
+Collections:
+  * title
+  * BookNode
+BookNode:
+  * Book
+  * Next
