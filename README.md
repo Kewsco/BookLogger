@@ -12,7 +12,9 @@ Functionality:
   * Print Full Collection
   * Search Collection (Not Implemented)
 
-Stuct Information
+The application uses a linked list data structure in order to store each of the books the user adds. 
+
+Struct Information
 ----
 Book Data:
   * title
