@@ -35,6 +35,7 @@ void HandleChoice(int choice){
     }
 }
 
+// Handles Init menu otions.
 void InitScreenOptions(int choice){
     switch(choice){
         case 0:
@@ -48,6 +49,7 @@ void InitScreenOptions(int choice){
     }
 }
 
+// Handles Main menu options.
 void MainScreenOptions(int choice){
     switch(choice){
         case 0:
@@ -99,6 +101,7 @@ void OpenCollection(int mode){
     DisplayMainMenu();
 }
 
+// Read the data of a provided txt file using the given name.
 int ReadCollectionData(char* title){
     strcpy(filePath, CreateFilePath(title));
     fptr = fopen(filePath, "r");
@@ -122,6 +125,7 @@ int ReadCollectionData(char* title){
     }
 }
 
+// Add a book to the collection.
 void AddToCollection(Book* book){
     struct BookNode* bn;
     bn = (struct BookNode *)calloc(1, sizeof(struct BookNode));
@@ -137,6 +141,7 @@ void AddToCollection(Book* book){
     }
 }
 
+// Remove a book from the collection. Finally free up the used memory.
 void RemoveFromCollection(){  
     int choice;
     printf("What entry would you like to delete? (Integer Value): ");
@@ -159,6 +164,7 @@ void RemoveFromCollection(){
     UpdateIDs();
 }
 
+// Loop through the collection and print the details of each book.
 void PrintCollection(){
     printf("Printing Collection: %s\n", collection->title);
     if(collection->collection == NULL){
@@ -178,6 +184,7 @@ void PrintCollection(){
     while(getchar() != '\n');
 }
 
+// Write the contents of the collection to a text file.
 void SaveCollection(){
     fptr = fopen(filePath, "w");
     if(fptr == 0)
@@ -195,11 +202,13 @@ void SaveCollection(){
     printf("Collection saved to: %s\n", filePath);
 }
 
+// Create/Open a file given the title of the collection chosen by the user.
 FILE* CreateAndOrOpenFile(char* title){
     strcpy(filePath, CreateFilePath(title));
     return fopen(filePath, "w");
 }
 
+// Delete the collection, freeing up all of the used memory in the process. Also deleted the txt file.
 void DeleteCollection(){
     struct BookNode* bn = collection->collection;
     while(bn){
@@ -221,11 +230,13 @@ void DeleteCollection(){
     DisplayInitMenu();
 }
 
+// Search the collection for a specific book. (Not Implemented)
 void SearchCollection(){
     printf("Searching Collection...\n");
     DisplayMainMenu();
 }
 
+// Prompts the user to enter details regarding a book. Creates book with said details and returns it.
 Book* CreateBook(){
     Book* newBook = malloc(sizeof(Book));
     printf("Book Title: ");
@@ -238,6 +249,7 @@ Book* CreateBook(){
     return newBook;
 }
 
+// Creates and returns a book using data provided by a txt file.
 Book* CreateBookFromFile(char* title, char* author){
     Book* nb = malloc(sizeof(Book));
     nb->id = collection->size +1;
@@ -247,6 +259,7 @@ Book* CreateBookFromFile(char* title, char* author){
     return nb;
 }
 
+// Update IDs of all books once one has been removed from the collection.
 void UpdateIDs(){
     collection->size = 0;
     struct BookNode* bn = collection->collection;
@@ -259,6 +272,7 @@ void UpdateIDs(){
     free(bn);
 }
 
+// Displays the Initialisation Menu to the user (Create/Load collection or quit.)
 void DisplayInitMenu(){
     currentScreen = INIT;
     int choice;
@@ -273,6 +287,7 @@ void DisplayInitMenu(){
     HandleChoice(choice);
 }
 
+// Display the Main Menu to the user (Print/Search/Add/Remove/Save/Delete/Quit)
 void DisplayMainMenu(){
     currentScreen = MAIN;
     int choice;
@@ -291,6 +306,7 @@ void DisplayMainMenu(){
     HandleChoice(choice);
 }
 
+// Takes the users chosen collection title, then creates a valid file path to the Collection folder, then returns it.
 char* CreateFilePath(char* name){
     char* fullName;
     fullName = malloc(sizeof(char)*50);
