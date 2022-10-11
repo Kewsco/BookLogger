@@ -39,8 +39,6 @@ void InitScreenOptions(int choice);
 void MainScreenOptions(int choice);
 
 //------ Collection Based Methods..
-void CreateCollection();
-void LoadCollection();
 void SaveCollection();
 void AddToCollection();
 void RemoveFromCollection();
@@ -49,8 +47,11 @@ void SaveCollection();
 void DeleteCollection();
 void SearchCollection();
 void UpdateIDs();
+void OpenCollection(int i);
+int ReadCollectionData(char* title);
 
 //Creation Methods..
 Book* CreateBook();
-FILE* CreateAndOpenFile();
+Book* CreateBookFromFile(char* title, char* author);
+FILE* CreateAndOrOpenFile();
 char* CreateFilePath(char* name);

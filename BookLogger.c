@@ -73,65 +73,54 @@ void MainScreenOptions(int choice){
     }
 }
 
-// Get an existing file path from the user. File must exist in the system.
-void LoadCollection(){
+// Open a collection with 2 modes. (0 - create a new collection. 1 - Load collection from existing file.)
+void OpenCollection(int mode){
     collection = malloc(sizeof(collection));
     if(!collection){
-        printf("Failed to create collection...");
-        return;
+        printf("Collection memory allocation error.\n");
     }
-    printf("Enter your filename (excluding .txt): ");
-    char* name;
-    scanf("%s", &name);
-    getchar();
-    fptr = CreateAndOpenFile(name);
-    printf("Opening File at: %s", filePath);
-    if(fptr == 0){
-        printf("Error loading file. Please enter a valid file path...\n");
-        while(getchar() != '\n');
-    } 
-    DisplayInitMenu();
-}
-
-void CreateCollection(){
-    collection = malloc(sizeof(collection));
-    if(!collection){
-        printf("Failed to create collection...");
-        return;
-    }
+    printf("Enter Collection Name (Max 20 Characters): ");
     char titleLoc[20];
     char* title = titleLoc;
-    printf("Collection Title (20 Characters Maximum - No Spaces): ");
     scanf("%s", title);
+    getchar();
     collection->title = title;
     collection->size = 0;
     collection->collection = NULL;
-    fptr = CreateAndOpenFile(title);
+    if(mode == 0){
+        // Create new collection file.
+        fptr = CreateAndOrOpenFile(title);
+    } else {
+        // Load from existing file.
+        int check = ReadCollectionData(title);
+        if(check == 0)
+            return;
+    }
     DisplayMainMenu();
 }
 
-// // Open a collection with 2 modes. (0 - create a new collection. 1 - Load collection from existing file.)
-// void OpenCollection(int mode){
-//     collection = maclloc(sizeof(collection));
-//     if(!collection){
-//         printf("Collection memory allocation error.");
-//     }
-//     printf("Enter Collection Name (Max 20 Characters): ");
-//     char titleLoc[20];
-//     char* title = titleLoc;
-//     scanf("%s", title);
-//     if(mode == 0){
-//         // Create new collection.
-//         CreateCollection(title);
-//         collection->title = title;
-//         collection->size = 0;
-//         collection->collection = NULL;
-//         fptr = CreateAndOpenFile(title);
-//     } else {
-//         // Load from existing file.
-//     }
-//     DisplayMainMenu();
-// }
+int ReadCollectionData(char* title){
+    strcpy(filePath, CreateFilePath(title));
+    fptr = fopen(filePath, "r");
+    if(!fptr){
+        printf("File Not Found...\n");
+        return 0;
+    } else {
+        
+        while(!feof(fptr)){
+            char id[3];
+            char title[35];
+            char author[25];
+            fgets(id, 3, fptr);
+            fgets(title, 35, fptr);
+            fgets(author, 25, fptr);
+            if(!feof(fptr))
+                AddToCollection(CreateBookFromFile(title, author));
+        }
+        fclose(fptr);
+        return 1;
+    }
+}
 
 void AddToCollection(Book* book){
     struct BookNode* bn;
@@ -145,7 +134,6 @@ void AddToCollection(Book* book){
         while(last->next != NULL)
             last = last->next;
         last->next = bn;
-        
     }
 }
 
@@ -193,7 +181,7 @@ void PrintCollection(){
 void SaveCollection(){
     fptr = fopen(filePath, "w");
     if(fptr == 0)
-        CreateAndOpenFile(collection->title);
+        CreateAndOrOpenFile(collection->title);
     //fprintf(fptr, "Collection: %s\n", collection->title);
     struct BookNode* bn = collection->collection;
     while(bn){
@@ -202,11 +190,12 @@ void SaveCollection(){
         fprintf(fptr, "%s", bn->book.author);
         bn = bn->next;
     }
+
     fclose(fptr);
     printf("Collection saved to: %s\n", filePath);
 }
 
-FILE* CreateAndOpenFile(char* title){
+FILE* CreateAndOrOpenFile(char* title){
     strcpy(filePath, CreateFilePath(title));
     return fopen(filePath, "w");
 }
@@ -223,9 +212,9 @@ void DeleteCollection(){
     free(bn);
     fclose(fptr);
     if(remove(filePath) == 0){
-        printf("Collection Deleted.");
+        printf("Collection Deleted.\n");
     } else {
-        printf("Could Not Delete Collection.");
+        printf("Could Not Delete Collection.\n");
     }
     printf("Press Enter to Continue");
     while(getchar() != '\n');
@@ -244,9 +233,18 @@ Book* CreateBook(){
     printf("Author: ");
     fgets(newBook->author, 25, stdin);
     newBook->id = collection->size+1;
-    collection->size += 1;
+    collection->size++;
     printf("Adding Book:\n\t%s\t%s", newBook->title, newBook->author);
     return newBook;
+}
+
+Book* CreateBookFromFile(char* title, char* author){
+    Book* nb = malloc(sizeof(Book));
+    nb->id = collection->size +1;
+    strcpy(nb->title, title);
+    strcpy(nb->author, author);
+    collection->size++;
+    return nb;
 }
 
 void UpdateIDs(){
@@ -286,7 +284,7 @@ void DisplayMainMenu(){
     printf("[5] - Save collection\n");
     printf("[6] - Delete Collection\n");
     printf("[0] - Quit\n");
-    printf("Select Option [0-5]: ");
+    printf("Select Option [0-6]: ");
     scanf(" %d", &choice);
     getchar();
     system("cls");
@@ -301,6 +299,5 @@ char* CreateFilePath(char* name){
     strcpy(fullName, dir);
     strcat(fullName, name);
     strcat(fullName, ext);
-    printf("%s", fullName);
     return fullName;
 }
