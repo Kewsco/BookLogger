@@ -7,7 +7,6 @@ char filePath[50];
 
 int main(int argc, char const *argv[])
 {
-    //CreateFilePath("Doggy.txt");
     while(1){
         switch(currentScreen){
             case INIT:
@@ -233,7 +232,7 @@ void DeleteCollection(){
 // Search the collection for a specific book. (Not Implemented)
 void SearchCollection(){
     printf("Searching Collection...\n");
-    DisplayMainMenu();
+    // TODO:- Search by Author...
 }
 
 // Prompts the user to enter details regarding a book. Creates book with said details and returns it.
