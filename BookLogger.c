@@ -157,6 +157,15 @@ void SaveCollection(){
 }
 
 void DeleteCollection(){
+    struct BookNode* bn = collection->collection;
+    while(bn){
+        free(bn);
+        bn = bn->next;
+    }
+    collection->collection = NULL;
+    collection = NULL;
+    free(collection);
+    free(bn);
     DisplayInitMenu();
 }
 
