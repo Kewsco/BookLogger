@@ -26,9 +26,8 @@ int main(int argc, char const *argv[])
 // Open a collection with 2 modes. (0 - create a new collection. 1 - Load collection from existing file.)
 void OpenCollection(int mode){
     collection = malloc(sizeof(collection));
-    if(!collection){
+    if(!collection)
         printf("Collection memory allocation error.\n");
-    }
     printf("Enter Collection Name (Max 20 Characters): ");
     char titleLoc[20];
     char* title = titleLoc;
@@ -149,7 +148,6 @@ void RemoveFromCollection(){
 
 // Loop through the collection and print the details of each book.
 void PrintCollection(){
-    printf("Printing Collection: %s\n", collection->title);
     if(collection->collection == NULL){
         printf("Collection is empty...\n");
     } else {
@@ -161,7 +159,7 @@ void PrintCollection(){
                 bn->book.author);
             bn = bn->next;
         }  
-        free(bn);
+        // free(bn);
     }
     printf("\nPress Enter to return to the main menu...");
     while(getchar() != '\n');
@@ -213,10 +211,20 @@ void DeleteCollection(){
     DisplayInitMenu();
 }
 
-// Search the collection for a specific book. (Not Implemented)
+// Search the collection for book by a specific author.
 void SearchCollection(){
-    printf("Searching Collection...\n");
-    // TODO:- Search by Author...
+    struct BookNode* bn;
+    char author[25];
+    printf("Enter and author: ");
+    fgets(author, 25, stdin);
+    bn = collection->collection;
+    while(bn){
+        if(strcmp(bn->book.author, author) == 0)
+            printf("[%d]......\n  Title : %s  Author: %s", bn->book.id, bn->book.title, bn->book.author);
+        bn = bn->next;
+    }
+    printf("Press Enter to Return to Main Menu...\n");
+    while(getchar() != '\n');
 }
 
 // Prompts the user to enter details regarding a book. Creates book with said details and returns it.

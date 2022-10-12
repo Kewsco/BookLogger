@@ -47,13 +47,13 @@ void AddAtSpecificIndex(struct BookNode** first, Book* book);
 
 //------ Collection Based Methods..
 void SaveCollection();
+void OpenCollection(int i);
 void RemoveFromCollection();
 void PrintCollection();
 void SaveCollection();
 void DeleteCollection();
 void SearchCollection();
 void UpdateIDs();
-void OpenCollection(int i);
 int ReadCollectionData(char* title);
 
 //Creation Methods..
