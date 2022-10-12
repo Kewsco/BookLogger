@@ -27,3 +27,9 @@ Collections:
 BookNode:
   * Book
   * Next
+
+Collection Insertion Functions:
+----
+* Prepend
+* Append
+* Insert
