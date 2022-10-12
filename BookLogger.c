@@ -15,63 +15,12 @@ int main(int argc, char const *argv[])
             case MAIN:
                 DisplayMainMenu();
                 break;
+            case INSERTION:
+                DisplayInsertionMenu();
+                break;
         }
     }
     return 0;
-}
-
-// Handle the choice of the user depending on what screen theyre currently on. 
-void HandleChoice(int choice){
-    switch(currentScreen){
-        case INIT:
-            InitScreenOptions(choice);
-            break;
-        case MAIN:
-            MainScreenOptions(choice);
-            break;
-        default:
-            printf("Option Selected.");
-    }
-}
-
-// Handles Init menu otions.
-void InitScreenOptions(int choice){
-    switch(choice){
-        case 0:
-            exit(0);
-        case 1:
-            OpenCollection(0);
-            break;
-        case 2:
-            OpenCollection(1);
-            break;
-    }
-}
-
-// Handles Main menu options.
-void MainScreenOptions(int choice){
-    switch(choice){
-        case 0:
-            exit(0);
-        case 1:
-            PrintCollection();
-            break;
-        case 2:
-            SearchCollection();
-            break;
-        case 3:
-            AddToCollection(CreateBook());
-            break;
-        case 4:
-            RemoveFromCollection();
-            break;
-        case 5:
-            SaveCollection();
-            break;
-        case 6:
-            DeleteCollection();
-            break;
-    }
 }
 
 // Open a collection with 2 modes. (0 - create a new collection. 1 - Load collection from existing file.)
@@ -124,7 +73,7 @@ int ReadCollectionData(char* title){
     }
 }
 
-// Add a book to the collection.
+// Add a book to the end of the collection.
 void AddToCollection(Book* book){
     struct BookNode* bn;
     bn = (struct BookNode *)calloc(1, sizeof(struct BookNode));
@@ -137,6 +86,41 @@ void AddToCollection(Book* book){
         while(last->next != NULL)
             last = last->next;
         last->next = bn;
+    }
+}
+
+// Prepend a new book to the beginning of a collection.
+void AddToStartOfCollection(struct BookNode** first, Book* book){
+    struct BookNode* bn;
+    bn = (struct BookNode*)calloc(1, sizeof(struct BookNode));
+    bn->book = *book;
+    bn->next = (*first);
+    (*first) = bn;
+    UpdateIDs();
+}
+
+// Add a new book at a specific index within the collection. 
+void AddAtSpecificIndex(struct BookNode** first, Book* book){
+    int index;
+    printf("Enter index between 1-%d:", collection->size);
+    scanf(" %d", &index);
+    getchar();
+    if(index < 1 || index > collection->size){
+        printf("Invalid Index entered...\n");
+    } else if(index == 1){
+        AddToStartOfCollection(&collection->collection, book);
+    } else if(index == collection->size){
+        AddToCollection(book);
+    } else {
+        struct BookNode* tmp = *first;
+        struct BookNode* bn = (struct BookNode*)calloc(1, sizeof(struct BookNode));
+        bn->book = *book;
+        for(int i = 1; i < index-1; i++){
+            tmp = tmp->next;
+        }
+        bn->next = tmp->next;
+        tmp->next = bn;
+        UpdateIDs();
     }
 }
 
@@ -303,6 +287,99 @@ void DisplayMainMenu(){
     getchar();
     system("cls");
     HandleChoice(choice);
+}
+
+// Display the insertion menu to the user (Prepend/Insert/Append)
+void DisplayInsertionMenu(){
+    currentScreen = INSERTION;
+    int choice;
+    printf("------ Book Insertion ------\n");
+    printf("[1] - Add to beginning\n");
+    printf("[2] - Insert at specific index\n");
+    printf("[3] - Add to end\n");
+    printf("[4] - Return to main menu.\n");
+    printf("Select Option [1-4]: ");
+    scanf(" %d", &choice);
+    getchar();
+    system("cls");
+    HandleChoice(choice);
+;}
+
+// Handle the choice of the user depending on what screen theyre currently on. 
+void HandleChoice(int choice){
+    switch(currentScreen){
+        case INIT:
+            InitScreenOptions(choice);
+            break;
+        case MAIN:
+            MainScreenOptions(choice);
+            break;
+        case INSERTION:
+            InsertionOptions(choice);
+            break;
+    }
+}
+
+// Handles Init menu options.
+void InitScreenOptions(int choice){
+    switch(choice){
+        case 0:
+            exit(0);
+        case 1:
+            OpenCollection(0);
+            break;
+        case 2:
+            OpenCollection(1);
+            break;
+    }
+}
+
+// Handles Main menu options.
+void MainScreenOptions(int choice){
+    switch(choice){
+        case 0:
+            exit(0);
+        case 1:
+            PrintCollection();
+            break;
+        case 2:
+            SearchCollection();
+            break;
+        case 3:
+            DisplayInsertionMenu();
+            break;
+        case 4:
+            RemoveFromCollection();
+            break;
+        case 5:
+            SaveCollection();
+            break;
+        case 6:
+            DeleteCollection();
+            break;
+    }
+}
+
+// Handles the insertion menu options.
+void InsertionOptions(int choice){
+    Book* book;
+    switch(choice){
+        case 1:
+            book = CreateBook();
+            AddToStartOfCollection(&collection->collection, book);
+            break;
+        case 2:
+            book = CreateBook();
+            AddAtSpecificIndex(&collection->collection, book);
+            break;
+        case 3:
+            book = CreateBook();
+            AddToCollection(book);
+            break;
+        case 4:
+            DisplayMainMenu();
+            break;
+    }
 }
 
 // Takes the users chosen collection title, then creates a valid file path to the Collection folder, then returns it.

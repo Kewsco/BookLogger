@@ -6,7 +6,7 @@
 // Macbook Test...
 // Enumerator to keep track of which screen the user is currently on. 
 typedef enum {
-    INIT, MAIN, OTHER
+    INIT, MAIN, INSERTION
 } Screen;
 
 // Struct to represent one book.
@@ -32,15 +32,21 @@ typedef struct {
 //------ Menu Displaying Methods..
 void DisplayInitMenu();
 void DisplayMainMenu();
+void DisplayInsertionMenu();
 
 //------Option Handling Methods..
 void HandleChoice(int choice);
 void InitScreenOptions(int choice);
 void MainScreenOptions(int choice);
+void InsertionOptions(int choice);
+
+//------Book Insertion Methods
+void AddToCollection(Book* book);
+void AddToStartOfCollection(struct BookNode** first, Book* book);
+void AddAtSpecificIndex(struct BookNode** first, Book* book);
 
 //------ Collection Based Methods..
 void SaveCollection();
-void AddToCollection();
 void RemoveFromCollection();
 void PrintCollection();
 void SaveCollection();
